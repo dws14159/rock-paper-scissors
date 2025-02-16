@@ -1,3 +1,15 @@
+function btnRock() {
+    playRound("rock");
+}
+
+function btnPaper() {
+    playRound("paper");
+}
+
+function btnScissors() {
+    playRound("scissors");
+}
+
 function getComputerChoice() {
     let choiceNo=Math.floor(Math.random()*3);
     switch (choiceNo) {
@@ -7,84 +19,62 @@ function getComputerChoice() {
     }
 }
 
-function getHumanChoice() {
-    let userInput = prompt("Enter rock, paper or scissors");
-    if (!userInput) {
-        quit=1;
-        return;
-    }
-    while (true) {
+function playRound(humanChoice) {
+    let computerChoice = getComputerChoice();
+    document.getElementById("compChoice").innerText = computerChoice;
+    let msg="";
+    let computerWin=false;
+    let playerWin=false;
 
-        userInput = (userInput ?? "").toLowerCase();
-
-        switch (userInput) {
-            case "rock":
-            case "paper":
-            case "scissors":
-                return userInput;
-
-            default:
-                userInput = prompt(`Invalid choice: ${userInput}. Please enter rock, paper or scissors`);
-                if (!userInput) {
-                    quit=1;
-                    return;
-                }
-        }
-    }
-}
-
-function playRound(humanChoice, computerChoice) {
     if (humanChoice == computerChoice) {
-        console.log("It's a tie!")
+        msg = "It's a tie! ";
     }
     else switch (humanChoice) {
         case "rock":
             if (computerChoice=="paper") {
-                console.log("Paper covers rock");
-                computerScore++;
+                msg = "Paper covers rock";
+                computerWin = true;
             } else if (computerChoice=="scissors") {
-                console.log("Rock blunts scissors");
-                humanScore++;
+                msg = "Rock blunts scissors";
+                playerWin=true;
             }
             break;
 
         case "paper":
             if (computerChoice=="rock") {
-                console.log("Paper wraps rock");
-                humanScore++;
+                msg = "Paper wraps rock";
+                playerWin=true;
             }
             else if (computerChoice=="scissors") {
-                console.log("Scissors cut paper");
-                computerScore++;
+                msg = "Scissors cut paper";
+                computerWin = true;
             }
             break;
 
         case "scissors":
             if (computerChoice=="rock") {
-                console.log("Rock blunts scissors");
-                computerScore++;
+                msg = "Rock blunts scissors";
+                computerWin = true;
             }
             else if (computerChoice=="paper") {
-                console.log("Scissors cut paper");
-                humanScore++;
+                msg = "Scissors cut paper";
+                playerWin=true;
             }
             break;
     }
-}
-
-function playGame() {
-    for (let round=1; round<=5; round++) {
-        if (quit)
-            break;
-
-        console.log(`Round ${round}. Human: ${humanScore}. Computer: ${computerScore}`);
-
-        let humanChoice=getHumanChoice();
-        let computerChoice=getComputerChoice();
-        console.log(`Computer picks ${computerChoice}`);
-        playRound(humanChoice, computerChoice);
+    if (playerWin) {
+        document.getElementById("gameMessage").innerText = msg + ".  Player wins!"
+        humanScore++;
     }
-    console.log(`Game over! Human: ${humanScore}. Computer: ${computerScore}`);
+    if (computerWin) {
+        document.getElementById("gameMessage").innerText = msg + ".  Computer wins!"
+        computerScore++;
+    }
+    if (!computerWin && !playerWin) {
+        document.getElementById("gameMessage").innerText = msg;
+    }
+    document.getElementById("playerScore").innerText = humanScore;
+    document.getElementById("compScore").innerText = computerScore;
 }
 
 console.log("Hello world");
@@ -92,4 +82,3 @@ console.log("Hello world");
 let humanScore = 0;
 let computerScore = 0;
 let quit = 0;
-playGame();
